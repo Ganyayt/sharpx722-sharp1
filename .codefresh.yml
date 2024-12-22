@@ -1,0 +1,30 @@
+version: '1.0'
+steps:
+  main_clone:
+    title: Clone Repository
+    type: git-clone
+    repo: "${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}"
+    revision: "${{CF_BRANCH}}"
+    git: github
+    clone_depth: 1
+
+  install_dependencies:
+    title: Install Dependencies
+    image: python:3.10
+    commands:
+      - apt-get update && apt-get install -y python3 python3-pip
+      - pip3 install telebot flask pymongo aiohttp certifi
+
+  run_bot:
+    title: Run Telegram Bot
+    image: python:3.10
+    commands:
+      - chmod +x sharp.py
+      - python3 sharp.py
+
+  run_cron:
+    title: Schedule Script
+    image: python:3.10
+    commands:
+      - pip install requests
+      - python cracks.py
